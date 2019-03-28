@@ -1,7 +1,8 @@
 FROM alpine:latest
+
 MAINTAINER José Morales <jsmsalt@gmail.com>
 
-# Set environment
+# Set environment.
 ENV PATH=$PATH:${PATH}:/opt/jdk/bin \
 	JAVA_HOME=/opt/jdk \
     JAVA_VERSION=8 \
@@ -10,11 +11,13 @@ ENV PATH=$PATH:${PATH}:/opt/jdk/bin \
     JAVA_PATH=42970487e3af4f5aa5bca3f542482c60 \
     GITHUB=https://github.com/leannenorthrop/alpine-pkg-glibc/releases/download/glibc-2.22-r1-armhf-beta
 
-# Install dependencies
-RUN apk --update --no-cache add xz tar curl ca-certificates
-
-# Install glibc
-RUN cd /tmp && \
+# Full installation.
+RUN echo "********** [INSTALLING DEPENDENCIES] **********" && \
+	apk --update --no-cache add xz tar curl ca-certificates && \
+	\
+	\
+	echo "********** [INSTALLING GLIB] **********" && \
+	cd /tmp && \
     curl -s -OJL ${GITHUB}/glibc-2.22-r1.apk && \
     curl -s -OJL ${GITHUB}/glibc-bin-2.22-r1.apk && \
     curl -s -OJL ${GITHUB}/libgcc_s.so && \
@@ -23,10 +26,11 @@ RUN cd /tmp && \
     apk add --allow-untrusted glibc-bin-2.22-r1.apk && \
     mv libgcc* /lib && \
     chmod a+x /lib/libgcc_s.so* && \
-    cp /usr/glibc-compat/lib/ld-linux-armhf.so.3 /lib
-
-# Install Java
-RUN cd /tmp && \
+    cp /usr/glibc-compat/lib/ld-linux-armhf.so.3 /lib && \
+    \
+    \
+    echo "********** [INSTALLING JAVA] **********" && \
+    cd /tmp && \
     curl -s -OJL --cookie "oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION}u${JAVA_UPDATE}-b${JAVA_BUILD}/${JAVA_PATH}/jdk-${JAVA_VERSION}u${JAVA_UPDATE}-linux-arm32-vfp-hflt.tar.gz" && \
     tar -xzf jdk-${JAVA_VERSION}u${JAVA_UPDATE}-linux-arm32-vfp-hflt.tar.gz && \
     mv jdk1.${JAVA_VERSION}.0_${JAVA_UPDATE} /opt/jdk && \
@@ -34,10 +38,11 @@ RUN cd /tmp && \
     /usr/glibc-compat/sbin/ldconfig /lib /usr/glibc-compat/lib \
     /opt/jdk/lib /opt/jdk/jre/lib \
     /opt/jdk/jre/lib/arm /opt/jdk/jre/lib/arm/jli && \
-    echo "hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4" >> /etc/nsswitch.conf
-
-# Clean up.
-RUN apk del xz tar curl ca-certificates bash && \
+    echo "hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4" >> /etc/nsswitch.conf && \
+    \
+    \
+    echo "********** [CLEAN UP] **********" && \
+    apk del xz tar curl ca-certificates bash && \
 	cd /tmp && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apk/* && \
     rm -f glibc-*.apk jdk*.tar.gz $JAVA_HOME/src.zip && \
