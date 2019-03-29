@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.9
 
 MAINTAINER José Morales <jsmsalt@gmail.com>
 
