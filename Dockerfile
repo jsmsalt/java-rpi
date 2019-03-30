@@ -41,9 +41,7 @@ RUN echo "********** [INSTALLING DEPENDENCIES] **********" \
 	&& tar -xzf jdk-${JAVA_VERSION}u${JAVA_UPDATE}-linux-arm32-vfp-hflt.tar.gz \
 	&& mv jdk1.${JAVA_VERSION}.0_${JAVA_UPDATE} /opt/jdk \
 	&& ln -s /opt/jdk/jre/bin/java /usr/bin/java \
-	&& /usr/glibc-compat/sbin/ldconfig /lib /usr/glibc-compat/lib \
-	&& /opt/jdk/lib /opt/jdk/jre/lib \
-	&& /opt/jdk/jre/lib/arm /opt/jdk/jre/lib/arm/jli \
+	&& /usr/glibc-compat/sbin/ldconfig /lib /usr/glibc-compat/lib /opt/jdk/lib /opt/jdk/jre/lib /opt/jdk/jre/lib/arm /opt/jdk/jre/lib/arm/jli \
 	&& echo "hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4" >> /etc/nsswitch.conf \
 	\
 	\
