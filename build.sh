@@ -1,6 +1,13 @@
 #!/bin/sh
 
-docker login && \
-docker build . -t java-rpi --no-cache && \
-docker tag java-rpi jsmsalt/java-rpi:latest && \
-docker push jsmsalt/java-rpi:latest
+DOCKERHUB_USERNAME=jsmsalt
+IMAGE_NAME=java-rpi
+IMAGE_TAG=latest
+
+if [ "$1" = "push" ]; then
+	docker login && \
+	docker push "$DOCKERHUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG"
+else
+	docker build . -t "$IMAGE_NAME" && \
+	docker tag "$IMAGE_NAME" "$DOCKERHUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG"
+fi

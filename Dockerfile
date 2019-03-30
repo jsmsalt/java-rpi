@@ -3,13 +3,22 @@ FROM alpine:3.9
 MAINTAINER Jose Morales <jsmsalt@gmail.com>
 
 # Set environment.
-ENV PATH=$PATH:${PATH}:/opt/jdk/bin \
+ENV TZ=UTC \
+	PATH=$PATH:${PATH}:/opt/jdk/bin \
 	JAVA_HOME=/opt/jdk \
 	JAVA_VERSION=8 \
 	JAVA_UPDATE=201 \
 	JAVA_BUILD=09 \
 	JAVA_PATH=42970487e3af4f5aa5bca3f542482c60 \
 	GITHUB=https://github.com/leannenorthrop/alpine-pkg-glibc/releases/download/glibc-2.22-r1-armhf-beta
+
+# System config
+RUN echo "********** [SET LOCALTIME AND TIMEZONE] **********" \
+	&& apk add --update --no-cache \
+		tzdata \
+	&& cp "/usr/share/zoneinfo/$TZ" /etc/localtime \
+	&& echo "$TZ" >  /etc/timezone \
+	&& apk del tzdata
 
 # Full installation.
 RUN echo "********** [INSTALLING DEPENDENCIES] **********" \
