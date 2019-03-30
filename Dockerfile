@@ -13,7 +13,11 @@ ENV PATH=$PATH:${PATH}:/opt/jdk/bin \
 
 # Full installation.
 RUN echo "********** [INSTALLING DEPENDENCIES] **********" \
-	&& apk --update --no-cache add xz tar curl ca-certificates \
+	&& apk add --update --no-cache --virtual build-dependencies \
+		xz \
+		tar \
+		curl \
+		ca-certificates \
 	\
 	\
 	&& echo "********** [INSTALLING GLIB] **********" \
@@ -42,11 +46,14 @@ RUN echo "********** [INSTALLING DEPENDENCIES] **********" \
 	\
 	\
 	&& echo "********** [CLEAN UP] **********" \
-	&& apk del xz tar curl ca-certificates bash \
+	&& apk del build-dependencies \
 	&& cd /tmp \
-	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apk/* \
 	&& rm -f glibc-*.apk jdk*.tar.gz $JAVA_HOME/src.zip \
-	&& rm -rf $JAVA_HOME/*src.zip \
+	&& rm -rf \
+		/tmp/* \
+		/var/tmp/* \
+		/var/cache/apk/* \
+		$JAVA_HOME/*src.zip \
 		$JAVA_HOME/lib/missioncontrol \
 		$JAVA_HOME/lib/visualvm \
 		$JAVA_HOME/lib/*javafx* \
